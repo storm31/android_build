@@ -42,7 +42,6 @@ endif
 
 # This specifies toolchain being used. In case of issues, stick with 4.7
 # 4.8 is default in my optimizations, as it gives noticable performance boost
-# Don't use 4.9 unless you feel confident, varios strange libstlport segmentation faults may happen (bootloop)
 ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
 TARGET_GCC_VERSION := 4.7
 #TARGET_GCC_VERSION := 4.8
@@ -81,7 +80,7 @@ TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 # This is where magic starts
 
 # Target ARM. Usually you don't need to change anything here
-TARGET_arm_CFLAGS := -Ofast -DNDEBUG -fstrict-aliasing -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
+TARGET_arm_CFLAGS := -O3 -DNDEBUG -fstrict-aliasing -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
 
 # Target THUMB, major portion of Android. Please change -O3 back to -Os in case of issues
 TARGET_thumb_CFLAGS := -mthumb -O3 -DNDEBUG -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -frerun-cse-after-loop -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
