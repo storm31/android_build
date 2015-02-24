@@ -355,10 +355,10 @@ def BuildBootableImage(sourcedir, fs_config_file, info_dict=None):
       cmd.append("--ramdisk_offset")
       cmd.append(open(fn).read().rstrip("\n"))
 
-    fn = os.path.join(sourcedir, "dt_args")
+    fn = os.path.join(sourcedir, "dt")
     if os.access(fn, os.F_OK):
       cmd.append("--dt")
-      cmd.append(open(fn).read().rstrip("\n"))
+      cmd.append(fn)
 
     fn = os.path.join(sourcedir, "pagesize")
     if os.access(fn, os.F_OK):
@@ -434,7 +434,7 @@ def UnzipTemp(filename, pattern=None):
   OPTIONS.tempfiles.append(tmp)
 
   def unzip_to_dir(filename, dirname):
-    cmd = ["rm", "-rf", dirname + filename, "targetfiles-*"]
+    subprocess.call(["rm", "-rf", dirname + filename, "targetfiles-*"])
     cmd = ["unzip", "-o", "-q", filename, "-d", dirname]
     if pattern is not None:
       cmd.append(pattern)
