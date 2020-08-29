@@ -1485,39 +1485,32 @@ function godir () {
 
 function cmremote()
 {
+    if ! git rev-parse --git-dir &> /dev/null
+    then
+        echo ".git directory not found. Please run this from the root directory of the Android repository you wish to set up."
+        return 1
+    fi
     git remote rm cmremote 2> /dev/null
-    if [ ! -d .git ]
-    then
-        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
-    fi
-    GERRIT_REMOTE=$(cat .git/config  | grep git://github.com | awk '{ print $NF }' | sed s#git://github.com/##g)
-    if [ -z "$GERRIT_REMOTE" ]
-    then
-        GERRIT_REMOTE=$(cat .git/config  | grep http://github.com | awk '{ print $NF }' | sed s#http://github.com/##g)
-        if [ -z "$GERRIT_REMOTE" ]
-        then
-          echo Unable to set up the git remote, are you in the root of the repo?
-          return 0
-        fi
-    fi
-    CMUSER=`git config --get review.review.lineageos.org.username`
+    GERRIT_REMOTE=$(git config --get remote.github.projectname)
+    CMUSER=$(git config --get review.review.lineageos.org.username)
     if [ -z "$CMUSER" ]
     then
         git remote add cmremote ssh://review.lineageos.org:29418/$GERRIT_REMOTE
     else
         git remote add cmremote ssh://$CMUSER@review.lineageos.org:29418/$GERRIT_REMOTE
     fi
-    echo You can now push to "cmremote".
+    echo "Remote 'cmremote' created"
 }
 
 function aospremote()
 {
-    git remote rm aosp 2> /dev/null
-    if [ ! -d .git ]
+    if ! git rev-parse --git-dir &> /dev/null
     then
-        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
+        echo ".git directory not found. Please run this from the root directory of the Android repository you wish to set up."
+        return 1
     fi
-    PROJECT=`pwd -P | sed s#$ANDROID_BUILD_TOP/##g`
+    git remote rm aosp 2> /dev/null
+    PROJECT=${$(pwd -P)#$ANDROID_BUILD_TOP/}
     if (echo $PROJECT | grep -qv "^device")
     then
         PFX="platform/"
@@ -1528,12 +1521,13 @@ function aospremote()
 
 function cafremote()
 {
-    git remote rm caf 2> /dev/null
-    if [ ! -d .git ]
+    if ! git rev-parse --git-dir &> /dev/null
     then
-        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
+        echo ".git directory not found. Please run this from the root directory of the Android repository you wish to set up."
+        return 1
     fi
-    PROJECT=`pwd -P | sed s#$ANDROID_BUILD_TOP/##g`
+    git remote rm caf 2> /dev/null
+    PROJECT=${$(pwd -P)#$ANDROID_BUILD_TOP/}
     if (echo $PROJECT | grep -qv "^device")
     then
         PFX="platform/"
